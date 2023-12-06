@@ -1,4 +1,5 @@
 import sys
+from datetime import datetime
 f = open("input.txt", "r")
 
 lines = f.readlines()
@@ -29,6 +30,7 @@ def getMappedValue(rows, val):
     return val
 
 final_val = sys.maxsize
+
 for seed in seeds:
     cur_val = seed
     for map in list_of_maps:
@@ -36,4 +38,8 @@ for seed in seeds:
 
     final_val = min(cur_val, final_val)
 
+startTime = datetime.now()
+for i in range(1000000000):
+    1 + 1
+print(datetime.now() - startTime)
 print(final_val)
