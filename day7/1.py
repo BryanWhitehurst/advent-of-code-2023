@@ -39,17 +39,27 @@ def getHandType(hand):
 def tieBreak(hands):
     card_types = 'AKQJT98765432'
     cur_winner = hands[0]
+    
     for i in range(1, len(hands)):
         next_hand = hands[i]
 
-        for j in range(len(next_hand)):
-            #next hand has a lower rank, return it
-            if card_types.find(cur_winner[0][j]) <  card_types.find(next_hand[0][j]):
+        for j in range(len(next_hand[0])):
+            find_current_winner = card_types.find(cur_winner[0][j])
+            find_next_hand = card_types.find(next_hand[0][j])
+            if find_current_winner == -1:
+                find_current_winner = 6
+
+            if find_next_hand == -1:
+                find_next_hand == 6
+            #next hand has a lower rank, compare with next hand
+            if find_current_winner <   find_next_hand:
                 cur_winner = next_hand
                 break
             
-            if card_types.find(cur_winner[0][j]) >  card_types.find(next_hand[0][j]):
+            #curent winner is still the lowest, compare it with the next hand
+            if find_current_winner >  find_next_hand:
                 break
+            
     return cur_winner
 
 lines = f.readlines()
@@ -64,10 +74,11 @@ while [] in ranks:
 
 final_rankings = []
 for rank in ranks:
+
     if len(rank) > 1:
         
         while(len(rank) != 1):
-            lowest_rank = tieBreak(rank)
+            lowest_rank = tieBreak(rank) #returns the lowest ranking
             rank.remove(lowest_rank)
             final_rankings.append(lowest_rank)
         
