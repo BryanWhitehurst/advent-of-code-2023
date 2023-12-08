@@ -16,28 +16,49 @@ def getHandType(hand):
 
     if len(card_types) == 1:
         return 6 #five of a kind
+        
+    elif len(card_types) == 2 and values[0] == 4 and 'J' in card_types:
+        return 6 #five of a kind with jack
     
     elif len(card_types) == 2 and values[0] == 4:
         return 5 #four of a kind
     
+    elif len(card_types) == 2 and values[0] == 3 and 'J' in card_types:
+        return 6 #five of a kind with 2 or 3 jacks
+    
     elif len(card_types) == 2 and values[0] == 3:
         return 4 #full house
 
+    elif len(card_types) == 3 and values[0] == 3 and 'J' in card_types:
+        return 5 #four of a kind
+    
     elif len(card_types) == 3 and values[0] == 3:
         return 3 #Three of a kind
+    
+    elif len(card_types) == 3 and values[0] == 2 and 'J' in card_types:
+        if card_types['J'] == 1:
+            return 4 #full house
+        else:
+            return 5 #four of a kind
     
     elif len(card_types) == 3 and values[0] == 2:
         return 2 #Two Pair
     
+    elif len(card_types) == 4 and 'J' in card_types:
+        return 3 #three of a kind
+    
     elif len(card_types) == 4:
         return 1 #One Pair
+    
+    elif len(card_types) == 5 and 'J' in card_types:
+        return 1 #one pair
     
     elif len(card_types) == 5:
         return 0 #High Card
     
 #should return the hand with the lowest rank
 def tieBreak(hands):
-    card_types = 'AKQJT98765432'
+    card_types = 'AKQT98765432J'
     cur_winner = hands[0]
     
     for i in range(1, len(hands)):
@@ -47,12 +68,12 @@ def tieBreak(hands):
             find_current_winner = card_types.find(cur_winner[0][j])
             find_next_hand = card_types.find(next_hand[0][j])
             if find_current_winner == -1:
-                find_current_winner = 6
+                find_current_winner = 50
 
             if find_next_hand == -1:
-                find_next_hand == 6
+                find_next_hand == 50
             #next hand has a lower rank, compare with next hand
-            if find_current_winner <   find_next_hand:
+            if find_current_winner <  find_next_hand:
                 cur_winner = next_hand
                 break
             
@@ -89,7 +110,7 @@ for rank in ranks:
         final_rankings.append(rank[0])
 
 total = 0
+
 for i in range(len(final_rankings)):
     total += final_rankings[i][1] * (i + 1)
-
 print(total)

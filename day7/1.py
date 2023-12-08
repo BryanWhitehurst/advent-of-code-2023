@@ -90,6 +90,7 @@ for rank in ranks:
 
 total = 0
 for i in range(len(final_rankings)):
+    print(final_rankings[i][0], final_rankings[i][1])
     total += final_rankings[i][1] * (i + 1)
 
 print(total)
