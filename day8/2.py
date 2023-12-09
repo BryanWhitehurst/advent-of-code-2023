@@ -13,37 +13,42 @@ for line in lines:
     val1 = val1[1:]
     val2 = val2[1:4]
     if key[2] == 'A':
-        starting_nodes.append(key)
+        starting_nodes.append([key, 0])
     
     node_dict[key] = [val1, val2]
 
-step_count = 0
-i = 0
-allZZZ = True
-while(True):
-    new_nodes = []
-    
-    if i == len(instructions):
-        i = 0
-
-    while(len(starting_nodes) > 0):
-        cur_node = starting_nodes.pop()
-
+#get num steps to Z for each starting node
+for node in starting_nodes:
+    step_count = 0
+    cur_node = node[0]
+    i = 0
+    while(True):
+        if i == len(instructions):
+            i = 0
+        
         if instructions[i] == 'L':
-            new_nodes.append(node_dict[cur_node][0])
-            if node_dict[cur_node][0][2] != 'Z': allZZZ = False
+            cur_node = node_dict[cur_node][0]
         else:
-            new_nodes.append(node_dict[cur_node][1])
-            if node_dict[cur_node][1][2] != 'Z': allZZZ = False
-    
-    step_count += 1
-    if allZZZ:
-        break
+            cur_node = node_dict[cur_node][1]
+        
+        step_count += 1
+        if cur_node[2] == 'Z':
+            node[1] = step_count
+            break
+        i += 1
 
-    allZZZ = True
-    starting_nodes = new_nodes.copy()
-    print(new_nodes)
-    new_nodes = []
-    i += 1
+print(starting_nodes)
 
-print(step_count)
+def gcd(a, b):
+    while b:
+        a, b = b, a % b
+    return a
+
+def lcm(a, b):
+    return (a * b) // gcd(a, b)
+
+result_lcm = starting_nodes[0][1]
+for node in starting_nodes[1:]:
+    result_lcm = lcm(result_lcm, node[1])
+
+print(result_lcm)
