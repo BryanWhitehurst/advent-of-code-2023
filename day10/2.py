@@ -121,42 +121,51 @@ while(True):
             cur_type = lines[cur_pos[0]][cur_pos[1]]
             continue
 
+#replace all pipe pieces that aren't apart of the loop with dots to make next part easier
+for i in range(len(lines)):
+     for j in range(len(lines[0]) - 1):
+         if (i, j) not in loop_positions:
+            string_list = list(lines[i])
+            string_list[j] = '.'
+            lines[i] = "".join(string_list)
+
 total = 0
 for i in range(len(lines)):
-    wallOpen = False
-    multipleFound = False
-    wall_open_pos = ()
     cur_count  = 0
+    wall_found = False
+    lFound = False
+    fFound = False
     for j in range(len(lines[0]) - 1):
-        if i == 8:
-            print(j)
-            print('open', wallOpen)
-            print('multiple', multipleFound)
-        if wallOpen and (i, j) not in loop_positions:
-            if multipleFound:
-                pipe = loop_positions[loop_positions.index((i, j - 1)) + 1]
-                if pipe[0] < i:
-                    wallOpen = False
-                else:
-                    wallOpen = True
-                multipleFound = False
-                continue
-            
-            #print('enclosed', (i, j))
-            cur_count += 1 
+        
+        if lines[i][j] == '|' or lines[i][j] == 'S':
+            wall_found = not wall_found
 
-        elif wallOpen and (i, j) in loop_positions:
-            if j == wall_open_pos + 1:
-                wall_open_pos = j
-                multipleFound = True
-                #continue this until no loop pipe found, then set to closed
-                continue
+        elif lFound and lines[i][j] == '7':
+            wall_found = not wall_found
+            lFound = False
 
-            wallOpen = False
+        elif lFound and lines[i][j] == 'J':
+            lFound = False
 
-        elif (i, j) in loop_positions:
-            wallOpen = True
-            wall_open_pos = j
+        elif fFound and lines[i][j] == 'J':
+            wall_found = not wall_found
+            fFound = False
+
+        elif fFound and lines[i][j] == '7':
+            fFound = False
+        
+        elif lFound and lines[i][j] == '-':
+            continue
+
+        elif lines[i][j] == 'L':
+            lFound = True
+
+        elif lines[i][j] == 'F':
+            fFound = True
+
+        elif wall_found and lines[i][j] == '.':
+            cur_count += 1
+
 
     total += cur_count
 print(total)
